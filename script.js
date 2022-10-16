@@ -1,6 +1,5 @@
-let firstCard = 10;
-let secondCard = 4;
-let sum = firstCard + secondCard;
+let cards = [];
+let sum = 0;
 let hasBlackJack = false;
 let isAlive = true;
 let message = '';
@@ -8,26 +7,62 @@ let messageEl = document.getElementById('message-el');
 let sumEl = document.getElementById('sum-el');
 let cardEl = document.getElementById('card-el');
 
-function startGame(){
+let player = {
+    name: 'Ankit',
+    chips: 100
+}
+
+let playerEl = document.getElementById('player-el')
+playerEl.textContent = player.name + ': $' + player.chips
+function renderGame(){
     if(sum <= 20){
         message='Do you want to draw a new card?';
+        // hasBlackJack = false
     }
     else if(sum === 21){
         message='You\'ve got Blackjack!';
+        hasBlackJack = true
     }
     else{
         message='You\'re out of the game!';
-        isAlive = false;
+        isAlive = false
     }
     
-    messageEl.innerText = message;
-    sumEl.innerText = "Sum: " + sum;
-    cardEl.innerText = "Cards: " + firstCard + ' ' + secondCard
+    messageEl.textContent = message;
+    sumEl.textContent = "Sum: " + sum;
+    cardEl.textContent = "Cards: "
+    cards.forEach(card=>(
+        cardEl.textContent += card + ' '
+    ))
 }
 
 function newCard(){
-    // console.log('Drawing a new card from the deck')
-    let card = 7;
-    sum += card;
-    startGame()
+    if(isAlive === true && hasBlackJack === false){
+        let card = getRandomCard();
+        sum += card;
+        cards.push(card)
+        renderGame()
+    }
+}
+
+function startGame(){
+    hasBlackJack = false;
+    isAlive = true;
+    let firstCard = getRandomCard();
+    let secondCard = getRandomCard();
+    cards = [firstCard, secondCard];
+    sum = firstCard + secondCard
+    // console.log(cards);
+    renderGame();
+}
+
+function getRandomCard(){
+    let randomNumber = Math.floor(Math.random() * 13) + 1;
+    if(randomNumber > 10){
+        return 10
+    }else if(randomNumber === 1){
+        return 11
+    }else{
+        return randomNumber
+    }
 }
